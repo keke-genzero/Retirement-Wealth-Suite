@@ -81,6 +81,7 @@
             padding: 0.75rem 1rem;
             font-weight: 600;
             transition: all 0.2s;
+            font-size: 1rem; /* Standardized Font Size */
         }
 
         .premium-input:focus {
@@ -100,7 +101,7 @@
             text-transform: uppercase;
         }
 
-        /* Removing arrows from number inputs for cleaner look */
+        /* Removing arrows from number inputs */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -108,6 +109,14 @@
         }
         input[type=number] {
             -moz-appearance: textfield;
+        }
+
+        .move-btn {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        tr:hover .move-btn {
+            opacity: 1;
         }
     </style>
 </head>
@@ -197,7 +206,7 @@
                 <table class="w-full text-left">
                     <thead class="bg-pink-50/30 text-pink-400 text-[10px] font-bold uppercase tracking-widest border-b border-pink-50">
                         <tr>
-                            <th class="px-6 py-4 w-10"></th>
+                            <th class="px-6 py-4 w-12">Order</th>
                             <th class="px-6 py-4" id="ui-th-category">Category</th>
                             <th class="px-6 py-4" id="ui-th-name">Asset Details</th>
                             <th class="px-6 py-4 text-right" id="ui-th-value">Value (HKD)</th>
@@ -262,7 +271,8 @@
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" id="ui-label-savings">Monthly Savings</label>
-                            <input type="text" id="monthly-savings" value="10,000" oninput="handleCurrencyInput(this); calculate()" class="premium-input w-full">
+                            <!-- Unified font size with monthly-goal -->
+                            <input type="text" id="monthly-savings" value="10,000" oninput="handleCurrencyInput(this); calculate()" class="premium-input w-full text-lg">
                         </div>
                         <div>
                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" id="ui-label-expense">Monthly Living Goal</label>
@@ -336,64 +346,28 @@
 
     const translations = {
         en: {
-            navNetworth: "Portfolio Manager",
-            navSim: "Simulator",
-            navAlloc: "Strategy Guide",
-            headerTitle: "Retirement Wealth Suite",
-            headerSub: "Intelligent financial oversight in a bespoke environment.",
-            statTotal: "Total Net Worth",
-            statTarget: "Retirement Goal",
-            statGap: "Current Shortfall",
-            statProj: "Projected Wealth",
-            thCat: "Category",
-            thName: "Asset Details",
-            thVal: "Value (HKD)",
-            assetList: "Wealth Inventory",
-            simSettings: "Forecast Parameters",
-            labelRetire: "Retirement Age",
-            labelReturn: "Expected Return",
-            labelSavings: "Monthly Savings",
-            labelExpense: "Monthly Living Goal",
-            projAnalysis: "Projection Analysis",
-            valMonthly: "Estimated Monthly Need",
-            valTarget: "Portfolio Target",
-            verdictOk: "On Track",
-            verdictFail: "Action Required",
-            allocTitle: "Portfolio Allocation Guide",
-            stratInsight: "Strategic Insight",
-            roles: {
+            navNetworth: "Portfolio Manager", navSim: "Simulator", navAlloc: "Strategy Guide",
+            headerTitle: "Retirement Wealth Suite", headerSub: "Intelligent financial oversight in a bespoke environment.",
+            statTotal: "Total Net Worth", statTarget: "Retirement Goal", statGap: "Current Shortfall", statProj: "Projected Wealth",
+            thCat: "Category", thName: "Asset Details", thVal: "Value (HKD)", assetList: "Wealth Inventory",
+            simSettings: "Forecast Parameters", labelRetire: "Retirement Age", labelReturn: "Expected Return",
+            labelSavings: "Monthly Savings", labelExpense: "Monthly Living Goal", projAnalysis: "Projection Analysis",
+            valMonthly: "Estimated Monthly Need", valTarget: "Portfolio Target", verdictOk: "On Track", verdictFail: "Action Required",
+            allocTitle: "Portfolio Allocation Guide", roles: {
                 young: ["Emergency Fund", "Compounding Base", "Growth Equities", "Dividend Reinvest", "Venture/Emerging"],
                 mid: ["Stable Liquidity", "Diversified Core", "Core Growth", "Income Stocks", "Commodities"],
                 old: ["Immediate Cash", "Preservation Core", "Defensive Growth", "Fixed Income", "Gold/Bonds"]
             }
         },
         zh: {
-            navNetworth: "資產清單",
-            navSim: "增長模擬",
-            navAlloc: "配置指引",
-            headerTitle: "專業退休財務套件",
-            headerSub: "度身訂造的財務監督與預測系統。",
-            statTotal: "當前淨資產",
-            statTarget: "退休目標",
-            statGap: "財務缺口",
-            statProj: "預計退休資產",
-            thCat: "類別",
-            thName: "資產名稱",
-            thVal: "估值 (HKD)",
-            assetList: "資產明細管理",
-            simSettings: "模擬設定",
-            labelRetire: "退休年齡",
-            labelReturn: "預期回報率",
-            labelSavings: "每月儲蓄",
-            labelExpense: "月開支目標",
-            projAnalysis: "財富趨勢分析",
-            valMonthly: "經調整月需",
-            valTarget: "資產目標",
-            verdictOk: "進度理想",
-            verdictFail: "需加強規劃",
-            allocTitle: "資產配置指引",
-            stratInsight: "策略洞察",
-            roles: {
+            navNetworth: "資產清單", navSim: "增長模擬", navAlloc: "配置指引",
+            headerTitle: "專業退休財務套件", headerSub: "度身訂造的財務監督與預測系統。",
+            statTotal: "當前淨資產", statTarget: "退休目標", statGap: "財務缺口", statProj: "預計退休資產",
+            thCat: "類別", thName: "資產名稱", thVal: "估值 (HKD)", assetList: "資產明細管理",
+            simSettings: "模擬設定", labelRetire: "退休年齡", labelReturn: "預期回報率",
+            labelSavings: "每月儲蓄", labelExpense: "月開支目標", projAnalysis: "財富趨勢分析",
+            valMonthly: "經調整月需", valTarget: "資產目標", verdictOk: "進度理想", verdictFail: "需加強規劃",
+            allocTitle: "資產配置指引", roles: {
                 young: ["緊急生活費", "複利基石", "全球增長股", "股息滾存", "另類增長"],
                 mid: ["12個月預備金", "核心分散", "穩定增長股", "平衡派息", "實物資產"],
                 old: ["24個月現金流", "資本保值", "防禦性資產", "固定收益", "保值資產"]
@@ -401,33 +375,23 @@
         }
     };
 
-    // Helper: Formats numbers with commas
     function formatNumber(num) {
         if (isNaN(num) || num === null) return "0";
         return Math.round(num).toLocaleString('en-US');
     }
 
-    // Helper: Parses comma-separated string back to number
     function parseNumber(str) {
         if (typeof str !== 'string') return parseFloat(str) || 0;
         return parseFloat(str.replace(/,/g, '')) || 0;
     }
 
-    // Helper: Handles the input event for text inputs intended to be currency
     function handleCurrencyInput(el) {
         let cursorPosition = el.selectionStart;
         let originalLength = el.value.length;
-        
         let rawValue = el.value.replace(/[^0-9]/g, '');
-        if (rawValue === '') {
-            el.value = '';
-            return;
-        }
-        
+        if (rawValue === '') { el.value = ''; return; }
         let formattedValue = parseInt(rawValue).toLocaleString('en-US');
         el.value = formattedValue;
-        
-        // Adjust cursor position after comma insertion
         let newLength = formattedValue.length;
         cursorPosition = cursorPosition + (newLength - originalLength);
         el.setSelectionRange(cursorPosition, cursorPosition);
@@ -447,36 +411,25 @@
 
     function updateUI() {
         const t = translations[currentLang];
-        document.getElementById('ui-nav-networth').innerText = t.navNetworth;
-        document.getElementById('ui-nav-sim').innerText = t.navSim;
-        document.getElementById('ui-nav-alloc').innerText = t.navAlloc;
-        document.getElementById('ui-header-title').innerText = t.headerTitle;
-        document.getElementById('ui-header-subtitle').innerText = t.headerSub;
+        Object.keys(t).forEach(key => {
+            const el = document.getElementById('ui-' + key.replace(/([A-Z])/g, "-$1").toLowerCase());
+            if (el) el.innerText = t[key];
+        });
         document.getElementById('ui-stat-total').innerText = t.statTotal;
         document.getElementById('ui-stat-target').innerText = t.statTarget;
         document.getElementById('ui-stat-gap').innerText = t.statGap;
         document.getElementById('ui-stat-projection').innerText = t.statProj;
-        document.getElementById('ui-asset-list').innerText = t.assetList;
-        document.getElementById('ui-th-category').innerText = t.thCat;
-        document.getElementById('ui-th-name').innerText = t.thName;
-        document.getElementById('ui-th-value').innerText = t.thVal;
-        document.getElementById('ui-sim-settings').innerText = t.simSettings;
-        document.getElementById('ui-label-retire-age').innerText = t.labelRetire;
-        document.getElementById('ui-label-return').innerText = t.labelReturn;
-        document.getElementById('ui-label-savings').innerText = t.labelSavings;
-        document.getElementById('ui-label-expense').innerText = t.labelExpense;
-        document.getElementById('ui-projection-analysis').innerText = t.projAnalysis;
-        document.getElementById('ui-val-monthly').innerText = t.valMonthly;
-        document.getElementById('ui-val-total-need').innerText = t.valTarget;
-        document.getElementById('ui-alloc-title').innerText = t.allocTitle;
-        document.getElementById('ui-alloc-th-cat').innerText = t.thCat;
+        calculate();
+    }
 
-        document.getElementById('ui-break-c1').innerText = masterCategories[0][currentLang];
-        document.getElementById('ui-break-c2').innerText = masterCategories[1][currentLang];
-        document.getElementById('ui-break-c3').innerText = masterCategories[3][currentLang];
-        document.getElementById('ui-break-c4').innerText = masterCategories[2][currentLang];
-        document.getElementById('ui-break-c5').innerText = masterCategories[4][currentLang];
-
+    // Function to move rows up or down
+    function moveRow(btn, direction) {
+        const row = btn.closest('tr');
+        if (direction === 'up' && row.previousElementSibling) {
+            row.parentNode.insertBefore(row, row.previousElementSibling);
+        } else if (direction === 'down' && row.nextElementSibling) {
+            row.parentNode.insertBefore(row.nextElementSibling, row);
+        }
         calculate();
     }
 
@@ -487,11 +440,16 @@
         
         const catOptions = masterCategories.map(c => `<option value="${c.id}" ${data.cat === c.id ? 'selected' : ''}>${currentLang === 'en' ? c.en : c.zh}</option>`).join('');
         
-        const formattedVal = formatNumber(data.val);
-
         tr.innerHTML = `
-            <td class="px-6 py-4 text-pink-200">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" /></svg>
+            <td class="px-6 py-4">
+                <div class="flex flex-col gap-1">
+                    <button onclick="moveRow(this, 'up')" class="move-btn text-pink-300 hover:text-pink-600">
+                        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><path d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"/></svg>
+                    </button>
+                    <button onclick="moveRow(this, 'down')" class="move-btn text-pink-300 hover:text-pink-600">
+                        <svg class="h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
+                    </button>
+                </div>
             </td>
             <td class="px-6 py-4">
                 <select onchange="calculate()" class="asset-cat bg-pink-50 text-pink-600 text-[10px] font-bold px-3 py-2 rounded-lg border-none outline-none w-48">
@@ -502,7 +460,7 @@
                 <input type="text" value="${data.name}" class="asset-name w-full bg-transparent border-none text-slate-900 font-semibold focus:ring-0 text-sm" placeholder="e.g. HSBC MPF">
             </td>
             <td class="px-6 py-4 text-right">
-                <input type="text" value="${formattedVal}" oninput="handleCurrencyInput(this); calculate()" class="asset-val bg-pink-50/30 text-right font-black text-slate-900 px-4 py-2 rounded-xl border-none focus:ring-2 focus:ring-pink-100 w-40 num-font">
+                <input type="text" value="${formatNumber(data.val)}" oninput="handleCurrencyInput(this); calculate()" class="asset-val bg-pink-50/30 text-right font-black text-slate-900 px-4 py-2 rounded-xl border-none focus:ring-2 focus:ring-pink-100 w-40 num-font">
             </td>
             <td class="px-6 py-4 text-right">
                 <button onclick="this.closest('tr').remove(); calculate()" class="text-pink-200 hover:text-pink-600 transition-colors opacity-0 group-hover:opacity-100">
@@ -527,8 +485,7 @@
         let catTotals = { Cash: 0, Core: 0, Growth: 0, Income: 0, Alt: 0 };
         
         document.querySelectorAll('#asset-table-body tr').forEach(row => {
-            const valInput = row.querySelector('.asset-val');
-            const val = parseNumber(valInput.value);
+            const val = parseNumber(row.querySelector('.asset-val').value);
             const cat = row.querySelector('.asset-cat').value;
             totalNetworth += val;
             catTotals[cat] += val;
@@ -554,28 +511,23 @@
         document.getElementById('res-target-total').innerText = 'HK$ ' + formatNumber(targetTotal);
 
         let fv = totalNetworth * Math.pow(1 + rate, yearsToRetire);
-        if (rate > 0) {
-            fv += (monthlySavings * 12) * ((Math.pow(1 + rate, yearsToRetire) - 1) / rate);
-        } else {
-            fv += (monthlySavings * 12) * yearsToRetire;
-        }
+        if (rate > 0) fv += (monthlySavings * 12) * ((Math.pow(1 + rate, yearsToRetire) - 1) / rate);
+        else fv += (monthlySavings * 12) * yearsToRetire;
 
         document.getElementById('stat-projection').innerText = 'HK$ ' + formatNumber(fv);
         
         const gap = targetTotal - fv;
         document.getElementById('stat-gap').innerText = 'HK$ ' + formatNumber(Math.max(0, gap));
         const verdict = document.getElementById('verdict-status');
-        const t = translations[currentLang];
         
         if (gap <= 0) {
-            verdict.innerText = t.verdictOk;
+            verdict.innerText = translations[currentLang].verdictOk;
             verdict.className = "status-badge bg-pink-500 text-white mb-4 inline-block";
         } else {
-            verdict.innerText = t.verdictFail;
+            verdict.innerText = translations[currentLang].verdictFail;
             verdict.className = "status-badge bg-slate-900 text-white mb-4 inline-block";
         }
         document.getElementById('verdict-gap').innerText = gap > 0 ? `Gap: HK$ ${formatNumber(gap)}` : `Surplus: HK$ ${formatNumber(Math.abs(gap))}`;
-
         updateAllocationGuide(baseAge);
     }
 
@@ -583,20 +535,9 @@
         const tbody = document.getElementById('alloc-table-body');
         const t = translations[currentLang];
         let stage, ratios, roles;
-
-        if (age < 35) {
-            stage = currentLang === 'en' ? "Wealth Accumulation" : "財富增長期";
-            ratios = ["10%", "20%", "50%", "10%", "10%"];
-            roles = t.roles.young;
-        } else if (age < 55) {
-            stage = currentLang === 'en' ? "Consolidation" : "穩健期";
-            ratios = ["10%", "30%", "30%", "20%", "10%"];
-            roles = t.roles.mid;
-        } else {
-            stage = currentLang === 'en' ? "Preservation" : "保值期";
-            ratios = ["20%", "40%", "10%", "25%", "5%"];
-            roles = t.roles.old;
-        }
+        if (age < 35) { stage = currentLang === 'en' ? "Wealth Accumulation" : "財富增長期"; ratios = ["10%", "20%", "50%", "10%", "10%"]; roles = t.roles.young; }
+        else if (age < 55) { stage = currentLang === 'en' ? "Consolidation" : "穩健期"; ratios = ["10%", "30%", "30%", "20%", "10%"]; roles = t.roles.mid; }
+        else { stage = currentLang === 'en' ? "Preservation" : "保值期"; ratios = ["20%", "40%", "10%", "25%", "5%"]; roles = t.roles.old; }
 
         document.getElementById('stage-tag').innerText = stage;
         tbody.innerHTML = masterCategories.map((mcat, i) => `
@@ -609,14 +550,22 @@
     }
 
     function exportData() {
-        let csv = "Category,Name,Value\n";
+        // Date stamp MM/DD/YYYY
+        const now = new Date();
+        const dateStr = `${(now.getMonth()+1).toString().padStart(2,'0')}/${now.getDate().toString().padStart(2,'0')}/${now.getFullYear()}`;
+        
+        let csv = "Date,Category,Name,Value\n";
         document.querySelectorAll('#asset-table-body tr').forEach(row => {
-            csv += `"${row.querySelector('.asset-cat').value}","${row.querySelector('.asset-name').value}",${parseNumber(row.querySelector('.asset-val').value)}\n`;
+            const cat = row.querySelector('.asset-cat').value;
+            const name = row.querySelector('.asset-name').value;
+            const val = parseNumber(row.querySelector('.asset-val').value);
+            csv += `"${dateStr}","${cat}","${name}",${val}\n`;
         });
+        
         const blob = new Blob([csv], { type: 'text/csv' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'retirement_plan.csv';
+        a.download = `rose_wealth_export_${now.getTime()}.csv`;
         a.click();
     }
 
