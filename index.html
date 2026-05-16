@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Retirement Suite - Rose Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #db2777;
+            --primary-hover: #be185d;
+            --primary-light: #fdf2f8;
+            --accent: #f472b6;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #fffafb;
+            color: #3f3f46;
+            letter-spacing: -0.011em;
+        }
+
+        .serif-font { font-family: 'Instrument Serif', serif; }
+
+        .sidebar {
+            background: #ffffff;
+            border-right: 1px solid #fce7f3;
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 50;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            padding: 2.5rem;
+        }
+
+        .glass-card {
+            background: white;
+            border: 1px solid #fce7f3;
+            box-shadow: 0 4px 20px -2px rgba(219, 39, 119, 0.03);
+            border-radius: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            border-radius: 0.75rem;
+            color: #71717a;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .premium-input {
+            background: #fffafa;
+            border: 1.5px solid #fce7f3;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .premium-input:focus {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(219, 39, 119, 0.1);
+            outline: none;
+        }
+
+        .num-font { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* Removing arrows from number inputs for cleaner look */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body>
+
+<aside class="sidebar p-6 flex flex-col">
+    <div class="flex items-center gap-3 px-2 mb-10">
+        <div class="w-10 h-10 bg-pink-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+        <h2 class="text-xl font-bold text-slate-900 tracking-tight">RoseWealth</h2>
+    </div>
+
+    <nav class="flex-1">
+        <div onclick="switchTab('portfolio')" id="nav-portfolio" class="nav-item active">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+            <span id="ui-nav-networth">Portfolio Manager</span>
+        </div>
+        <div onclick="switchTab('simulator')" id="nav-simulator" class="nav-item">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+            <span id="ui-nav-sim">Growth Simulator</span>
+        </div>
+        <div onclick="switchTab('allocation')" id="nav-allocation" class="nav-item">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /></svg>
+            <span id="ui-nav-alloc">Strategy Guide</span>
+        </div>
+    </nav>
+
+    <div class="mt-auto bg-pink-50/50 p-4 rounded-2xl border border-pink-100">
+        <label class="text-[10px] font-bold text-pink-400 uppercase tracking-widest mb-2 block" id="ui-current-age-label">Current Age</label>
+        <div class="flex items-center gap-3">
+            <input type="number" id="base-age" value="39" oninput="calculate()" 
+                class="w-16 bg-white border border-pink-100 rounded-lg p-2 font-bold text-pink-600 focus:ring-2 focus:ring-pink-100 outline-none">
+            <span class="text-xs font-semibold text-slate-500">Years Old</span>
+        </div>
+    </div>
+</aside>
+
+<main class="main-content">
+    <header class="flex justify-between items-center mb-10">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-1" id="ui-header-title">Retirement Wealth Suite</h1>
+            <p class="text-slate-500 text-sm font-medium" id="ui-header-subtitle">Intelligent financial oversight in a bespoke environment.</p>
+        </div>
+        <div class="flex gap-3">
+            <button onclick="toggleLang()" class="px-4 py-2 text-sm font-semibold text-pink-600 border border-pink-100 bg-white rounded-xl hover:bg-pink-50 transition-colors">
+                EN / 中文
+            </button>
+            <button onclick="exportData()" class="px-6 py-2 text-sm font-bold text-white bg-pink-600 rounded-xl hover:bg-pink-700 shadow-lg transition-all">
+                Export Data
+            </button>
+        </div>
+    </header>
+
+    <!-- Top Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div class="glass-card p-6 border-l-4 border-pink-500">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2" id="ui-stat-total">Total Net Worth</p>
+            <h3 class="text-2xl font-black text-slate-900 num-font" id="stat-total">HK$ 0</h3>
+        </div>
+        <div class="glass-card p-6">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2" id="ui-stat-target">Retirement Goal</p>
+            <h3 class="text-2xl font-black text-slate-900 num-font" id="stat-target">HK$ 0</h3>
+        </div>
+        <div class="glass-card p-6">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2" id="ui-stat-gap">Current Shortfall</p>
+            <h3 class="text-2xl font-black text-pink-600 num-font" id="stat-gap">HK$ 0</h3>
+        </div>
+        <div class="glass-card p-6 bg-slate-900 text-white">
+            <p class="text-[10px] font-bold text-pink-300 uppercase tracking-wider mb-2" id="ui-stat-projection">Projected (Retire)</p>
+            <h3 class="text-2xl font-black text-pink-200 num-font" id="stat-projection">HK$ 0</h3>
+        </div>
+    </div>
+
+    <!-- Portfolio Tab -->
+    <div id="panel-portfolio" class="tab-panel active">
+        <div class="glass-card overflow-hidden mb-8">
+            <div class="p-6 border-b border-pink-50 flex justify-between items-center bg-pink-50/20">
+                <h3 class="font-bold text-slate-900" id="ui-asset-list">Wealth Inventory</h3>
+                <button onclick="addAssetRow()" class="px-4 py-2 bg-pink-600 text-white text-xs font-bold rounded-lg hover:bg-pink-700 shadow-md shadow-pink-100">
+                    + Add New Asset
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-pink-50/30 text-pink-400 text-[10px] font-bold uppercase tracking-widest border-b border-pink-50">
+                        <tr>
+                            <th class="px-6 py-4 w-10"></th>
+                            <th class="px-6 py-4" id="ui-th-category">Category</th>
+                            <th class="px-6 py-4" id="ui-th-name">Asset Details</th>
+                            <th class="px-6 py-4 text-right" id="ui-th-value">Value (HKD)</th>
+                            <th class="px-6 py-4 w-16"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="asset-table-body" class="divide-y divide-pink-50"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Portfolio Breakdown -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="glass-card p-5 text-center bg-white/60">
+                <p class="text-[9px] font-bold text-slate-400 uppercase mb-3 leading-tight" id="ui-break-c1">1. Cash & Liquidity</p>
+                <h4 class="text-xl font-black text-slate-900 num-font" id="break-val-0">0.0<span class="text-xs text-slate-400 ml-0.5">%</span></h4>
+            </div>
+            <div class="glass-card p-5 text-center bg-white/60">
+                <p class="text-[9px] font-bold text-slate-400 uppercase mb-3 leading-tight" id="ui-break-c2">2. Retirement Core (MPF)</p>
+                <h4 class="text-xl font-black text-slate-900 num-font" id="break-val-1">0.0<span class="text-xs text-slate-400 ml-0.5">%</span></h4>
+            </div>
+            <div class="glass-card p-5 text-center bg-white/60">
+                <p class="text-[9px] font-bold text-slate-400 uppercase mb-3 leading-tight" id="ui-break-c3">3. Savings & Insurance</p>
+                <h4 class="text-xl font-black text-slate-900 num-font" id="break-val-3">0.0<span class="text-xs text-slate-400 ml-0.5">%</span></h4>
+            </div>
+            <div class="glass-card p-5 text-center bg-white/60 border-pink-200">
+                <p class="text-[9px] font-bold text-pink-600 uppercase mb-3 leading-tight" id="ui-break-c4">4. Growth Investment</p>
+                <h4 class="text-xl font-black text-slate-900 num-font" id="break-val-2">0.0<span class="text-xs text-slate-400 ml-0.5">%</span></h4>
+            </div>
+            <div class="glass-card p-5 text-center bg-white/60">
+                <p class="text-[9px] font-bold text-slate-400 uppercase mb-3 leading-tight" id="ui-break-c5">5. Physical & Alts</p>
+                <h4 class="text-xl font-black text-slate-900 num-font" id="break-val-4">0.0<span class="text-xs text-slate-400 ml-0.5">%</span></h4>
+            </div>
+            <div class="glass-card p-5 text-center bg-pink-50/30 border-pink-100">
+                <p class="text-[9px] font-bold text-pink-400 uppercase mb-3 leading-tight">TOTAL (PV)</p>
+                <h4 class="text-xl font-black text-pink-600 num-font">100<span class="text-xs ml-0.5">%</span></h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulator Tab -->
+    <div id="panel-simulator" class="tab-panel">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div class="lg:col-span-1 space-y-6">
+                <div class="glass-card p-8">
+                    <h4 class="font-bold text-slate-900 mb-6 flex items-center gap-2">
+                        <span class="w-1 h-4 bg-pink-500 rounded-full"></span>
+                        <span id="ui-sim-settings">Forecast Parameters</span>
+                    </h4>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" id="ui-label-retire-age">Retirement Age</label>
+                            <input type="number" id="retire-age" value="65" oninput="calculate()" class="premium-input w-full">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" id="ui-label-return">Expected Return (%)</label>
+                            <div class="flex items-center gap-4">
+                                <input type="range" id="exp-return" min="0" max="15" step="0.5" value="6" oninput="calculate()" class="flex-1 accent-pink-600">
+                                <span class="w-12 font-black text-pink-600 text-sm num-font" id="display-return">6%</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" id="ui-label-savings">Monthly Savings</label>
+                            <input type="text" id="monthly-savings" value="10,000" oninput="handleCurrencyInput(this); calculate()" class="premium-input w-full">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2" id="ui-label-expense">Monthly Living Goal</label>
+                            <input type="text" id="monthly-goal" value="30,000" oninput="handleCurrencyInput(this); calculate()" class="premium-input w-full text-lg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2">
+                <div class="glass-card p-8 bg-pink-900 text-white min-h-[400px] flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-8 opacity-10">
+                        <svg class="w-40 h-40" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
+                    </div>
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-pink-200 mb-10" id="ui-projection-analysis">Projection Analysis</h3>
+                    <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        <div class="space-y-6">
+                            <div>
+                                <p class="text-xs text-pink-200 font-semibold mb-1" id="ui-val-monthly">Estimated Monthly Need</p>
+                                <h4 class="text-3xl font-black num-font" id="res-inflated-monthly">HK$ 0</h4>
+                            </div>
+                            <div>
+                                <p class="text-xs text-pink-200 font-semibold mb-1" id="ui-val-total-need">Portfolio Target (4% Rule)</p>
+                                <h4 class="text-4xl font-black num-font" id="res-target-total">HK$ 0</h4>
+                            </div>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+                            <p class="text-[10px] font-bold text-pink-100 uppercase tracking-widest mb-4">Verdict</p>
+                            <div id="verdict-status" class="status-badge bg-pink-500 text-white mb-4 inline-block">On Track</div>
+                            <p class="text-2xl font-bold leading-tight num-font" id="verdict-gap">Gap: HK$ 0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Allocation Tab -->
+    <div id="panel-allocation" class="tab-panel">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl serif-font text-slate-900 mb-2" id="ui-alloc-title">Allocation Strategy</h2>
+                <div class="inline-block px-4 py-1.5 bg-pink-50 text-pink-600 rounded-full text-xs font-bold uppercase tracking-wider" id="stage-tag">Wealth Accumulation</div>
+            </div>
+            <div class="glass-card overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-pink-50 text-pink-400 text-[10px] font-bold uppercase tracking-widest border-b border-pink-100">
+                        <tr>
+                            <th class="px-8 py-5" id="ui-alloc-th-cat">Asset Category</th>
+                            <th class="px-8 py-5 text-center" id="ui-alloc-th-target">Suggested %</th>
+                            <th class="px-8 py-5" id="ui-alloc-th-role">Strategic Role</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alloc-table-body" class="divide-y divide-pink-50"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    let currentLang = 'en';
+
+    const masterCategories = [
+        { id: "Cash", en: "1. Cash & Liquidity", zh: "1. 現金與流動性" },
+        { id: "Core", en: "2. Retirement Core (MPF)", zh: "2. 退休核心 (強積金)" },
+        { id: "Growth", en: "4. Growth Investment", zh: "4. 增長投資" },
+        { id: "Income", en: "3. Savings & Insurance", zh: "3. 收益與保險" },
+        { id: "Alt", en: "5. Physical & Alternatives", zh: "5. 實物與另類資產" }
+    ];
+
+    const translations = {
+        en: {
+            navNetworth: "Portfolio Manager",
+            navSim: "Simulator",
+            navAlloc: "Strategy Guide",
+            headerTitle: "Retirement Wealth Suite",
+            headerSub: "Intelligent financial oversight in a bespoke environment.",
+            statTotal: "Total Net Worth",
+            statTarget: "Retirement Goal",
+            statGap: "Current Shortfall",
+            statProj: "Projected Wealth",
+            thCat: "Category",
+            thName: "Asset Details",
+            thVal: "Value (HKD)",
+            assetList: "Wealth Inventory",
+            simSettings: "Forecast Parameters",
+            labelRetire: "Retirement Age",
+            labelReturn: "Expected Return",
+            labelSavings: "Monthly Savings",
+            labelExpense: "Monthly Living Goal",
+            projAnalysis: "Projection Analysis",
+            valMonthly: "Estimated Monthly Need",
+            valTarget: "Portfolio Target",
+            verdictOk: "On Track",
+            verdictFail: "Action Required",
+            allocTitle: "Portfolio Allocation Guide",
+            stratInsight: "Strategic Insight",
+            roles: {
+                young: ["Emergency Fund", "Compounding Base", "Growth Equities", "Dividend Reinvest", "Venture/Emerging"],
+                mid: ["Stable Liquidity", "Diversified Core", "Core Growth", "Income Stocks", "Commodities"],
+                old: ["Immediate Cash", "Preservation Core", "Defensive Growth", "Fixed Income", "Gold/Bonds"]
+            }
+        },
+        zh: {
+            navNetworth: "資產清單",
+            navSim: "增長模擬",
+            navAlloc: "配置指引",
+            headerTitle: "專業退休財務套件",
+            headerSub: "度身訂造的財務監督與預測系統。",
+            statTotal: "當前淨資產",
+            statTarget: "退休目標",
+            statGap: "財務缺口",
+            statProj: "預計退休資產",
+            thCat: "類別",
+            thName: "資產名稱",
+            thVal: "估值 (HKD)",
+            assetList: "資產明細管理",
+            simSettings: "模擬設定",
+            labelRetire: "退休年齡",
+            labelReturn: "預期回報率",
+            labelSavings: "每月儲蓄",
+            labelExpense: "月開支目標",
+            projAnalysis: "財富趨勢分析",
+            valMonthly: "經調整月需",
+            valTarget: "資產目標",
+            verdictOk: "進度理想",
+            verdictFail: "需加強規劃",
+            allocTitle: "資產配置指引",
+            stratInsight: "策略洞察",
+            roles: {
+                young: ["緊急生活費", "複利基石", "全球增長股", "股息滾存", "另類增長"],
+                mid: ["12個月預備金", "核心分散", "穩定增長股", "平衡派息", "實物資產"],
+                old: ["24個月現金流", "資本保值", "防禦性資產", "固定收益", "保值資產"]
+            }
+        }
+    };
+
+    // Helper: Formats numbers with commas
+    function formatNumber(num) {
+        if (isNaN(num) || num === null) return "0";
+        return Math.round(num).toLocaleString('en-US');
+    }
+
+    // Helper: Parses comma-separated string back to number
+    function parseNumber(str) {
+        if (typeof str !== 'string') return parseFloat(str) || 0;
+        return parseFloat(str.replace(/,/g, '')) || 0;
+    }
+
+    // Helper: Handles the input event for text inputs intended to be currency
+    function handleCurrencyInput(el) {
+        let cursorPosition = el.selectionStart;
+        let originalLength = el.value.length;
+        
+        let rawValue = el.value.replace(/[^0-9]/g, '');
+        if (rawValue === '') {
+            el.value = '';
+            return;
+        }
+        
+        let formattedValue = parseInt(rawValue).toLocaleString('en-US');
+        el.value = formattedValue;
+        
+        // Adjust cursor position after comma insertion
+        let newLength = formattedValue.length;
+        cursorPosition = cursorPosition + (newLength - originalLength);
+        el.setSelectionRange(cursorPosition, cursorPosition);
+    }
+
+    function toggleLang() {
+        currentLang = currentLang === 'en' ? 'zh' : 'en';
+        updateUI();
+    }
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.getElementById('panel-' + tab).classList.add('active');
+        document.getElementById('nav-' + tab).classList.add('active');
+    }
+
+    function updateUI() {
+        const t = translations[currentLang];
+        document.getElementById('ui-nav-networth').innerText = t.navNetworth;
+        document.getElementById('ui-nav-sim').innerText = t.navSim;
+        document.getElementById('ui-nav-alloc').innerText = t.navAlloc;
+        document.getElementById('ui-header-title').innerText = t.headerTitle;
+        document.getElementById('ui-header-subtitle').innerText = t.headerSub;
+        document.getElementById('ui-stat-total').innerText = t.statTotal;
+        document.getElementById('ui-stat-target').innerText = t.statTarget;
+        document.getElementById('ui-stat-gap').innerText = t.statGap;
+        document.getElementById('ui-stat-projection').innerText = t.statProj;
+        document.getElementById('ui-asset-list').innerText = t.assetList;
+        document.getElementById('ui-th-category').innerText = t.thCat;
+        document.getElementById('ui-th-name').innerText = t.thName;
+        document.getElementById('ui-th-value').innerText = t.thVal;
+        document.getElementById('ui-sim-settings').innerText = t.simSettings;
+        document.getElementById('ui-label-retire-age').innerText = t.labelRetire;
+        document.getElementById('ui-label-return').innerText = t.labelReturn;
+        document.getElementById('ui-label-savings').innerText = t.labelSavings;
+        document.getElementById('ui-label-expense').innerText = t.labelExpense;
+        document.getElementById('ui-projection-analysis').innerText = t.projAnalysis;
+        document.getElementById('ui-val-monthly').innerText = t.valMonthly;
+        document.getElementById('ui-val-total-need').innerText = t.valTarget;
+        document.getElementById('ui-alloc-title').innerText = t.allocTitle;
+        document.getElementById('ui-alloc-th-cat').innerText = t.thCat;
+
+        document.getElementById('ui-break-c1').innerText = masterCategories[0][currentLang];
+        document.getElementById('ui-break-c2').innerText = masterCategories[1][currentLang];
+        document.getElementById('ui-break-c3').innerText = masterCategories[3][currentLang];
+        document.getElementById('ui-break-c4').innerText = masterCategories[2][currentLang];
+        document.getElementById('ui-break-c5').innerText = masterCategories[4][currentLang];
+
+        calculate();
+    }
+
+    function addAssetRow(data = { cat: 'Growth', name: '', val: 0 }) {
+        const body = document.getElementById('asset-table-body');
+        const tr = document.createElement('tr');
+        tr.className = "group hover:bg-pink-50/20 transition-all";
+        
+        const catOptions = masterCategories.map(c => `<option value="${c.id}" ${data.cat === c.id ? 'selected' : ''}>${currentLang === 'en' ? c.en : c.zh}</option>`).join('');
+        
+        const formattedVal = formatNumber(data.val);
+
+        tr.innerHTML = `
+            <td class="px-6 py-4 text-pink-200">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" /></svg>
+            </td>
+            <td class="px-6 py-4">
+                <select onchange="calculate()" class="asset-cat bg-pink-50 text-pink-600 text-[10px] font-bold px-3 py-2 rounded-lg border-none outline-none w-48">
+                    ${catOptions}
+                </select>
+            </td>
+            <td class="px-6 py-4">
+                <input type="text" value="${data.name}" class="asset-name w-full bg-transparent border-none text-slate-900 font-semibold focus:ring-0 text-sm" placeholder="e.g. HSBC MPF">
+            </td>
+            <td class="px-6 py-4 text-right">
+                <input type="text" value="${formattedVal}" oninput="handleCurrencyInput(this); calculate()" class="asset-val bg-pink-50/30 text-right font-black text-slate-900 px-4 py-2 rounded-xl border-none focus:ring-2 focus:ring-pink-100 w-40 num-font">
+            </td>
+            <td class="px-6 py-4 text-right">
+                <button onclick="this.closest('tr').remove(); calculate()" class="text-pink-200 hover:text-pink-600 transition-colors opacity-0 group-hover:opacity-100">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
+            </td>
+        `;
+        body.appendChild(tr);
+        calculate();
+    }
+
+    function calculate() {
+        const baseAge = parseInt(document.getElementById('base-age').value) || 39;
+        const retireAge = parseInt(document.getElementById('retire-age').value) || 65;
+        const rate = (parseFloat(document.getElementById('exp-return').value) || 6) / 100;
+        const monthlySavings = parseNumber(document.getElementById('monthly-savings').value);
+        const monthlyGoal = parseNumber(document.getElementById('monthly-goal').value);
+        
+        document.getElementById('display-return').innerText = (rate * 100).toFixed(1) + '%';
+
+        let totalNetworth = 0;
+        let catTotals = { Cash: 0, Core: 0, Growth: 0, Income: 0, Alt: 0 };
+        
+        document.querySelectorAll('#asset-table-body tr').forEach(row => {
+            const valInput = row.querySelector('.asset-val');
+            const val = parseNumber(valInput.value);
+            const cat = row.querySelector('.asset-cat').value;
+            totalNetworth += val;
+            catTotals[cat] += val;
+        });
+
+        document.getElementById('stat-total').innerText = 'HK$ ' + formatNumber(totalNetworth);
+
+        if (totalNetworth > 0) {
+            Object.keys(catTotals).forEach((key, idx) => {
+                const perc = (catTotals[key] / totalNetworth * 100).toFixed(1);
+                const el = document.getElementById(`break-val-${idx}`);
+                if (el) el.innerHTML = `${perc}<span class="text-xs text-slate-400 ml-0.5">%</span>`;
+            });
+        }
+
+        const yearsToRetire = Math.max(0, retireAge - baseAge);
+        const inflation = 0.03;
+        const inflatedMonthly = monthlyGoal * Math.pow(1 + inflation, yearsToRetire);
+        const targetTotal = inflatedMonthly * 300; 
+
+        document.getElementById('stat-target').innerText = 'HK$ ' + formatNumber(targetTotal);
+        document.getElementById('res-inflated-monthly').innerText = 'HK$ ' + formatNumber(inflatedMonthly);
+        document.getElementById('res-target-total').innerText = 'HK$ ' + formatNumber(targetTotal);
+
+        let fv = totalNetworth * Math.pow(1 + rate, yearsToRetire);
+        if (rate > 0) {
+            fv += (monthlySavings * 12) * ((Math.pow(1 + rate, yearsToRetire) - 1) / rate);
+        } else {
+            fv += (monthlySavings * 12) * yearsToRetire;
+        }
+
+        document.getElementById('stat-projection').innerText = 'HK$ ' + formatNumber(fv);
+        
+        const gap = targetTotal - fv;
+        document.getElementById('stat-gap').innerText = 'HK$ ' + formatNumber(Math.max(0, gap));
+        const verdict = document.getElementById('verdict-status');
+        const t = translations[currentLang];
+        
+        if (gap <= 0) {
+            verdict.innerText = t.verdictOk;
+            verdict.className = "status-badge bg-pink-500 text-white mb-4 inline-block";
+        } else {
+            verdict.innerText = t.verdictFail;
+            verdict.className = "status-badge bg-slate-900 text-white mb-4 inline-block";
+        }
+        document.getElementById('verdict-gap').innerText = gap > 0 ? `Gap: HK$ ${formatNumber(gap)}` : `Surplus: HK$ ${formatNumber(Math.abs(gap))}`;
+
+        updateAllocationGuide(baseAge);
+    }
+
+    function updateAllocationGuide(age) {
+        const tbody = document.getElementById('alloc-table-body');
+        const t = translations[currentLang];
+        let stage, ratios, roles;
+
+        if (age < 35) {
+            stage = currentLang === 'en' ? "Wealth Accumulation" : "財富增長期";
+            ratios = ["10%", "20%", "50%", "10%", "10%"];
+            roles = t.roles.young;
+        } else if (age < 55) {
+            stage = currentLang === 'en' ? "Consolidation" : "穩健期";
+            ratios = ["10%", "30%", "30%", "20%", "10%"];
+            roles = t.roles.mid;
+        } else {
+            stage = currentLang === 'en' ? "Preservation" : "保值期";
+            ratios = ["20%", "40%", "10%", "25%", "5%"];
+            roles = t.roles.old;
+        }
+
+        document.getElementById('stage-tag').innerText = stage;
+        tbody.innerHTML = masterCategories.map((mcat, i) => `
+            <tr>
+                <td class="px-8 py-5 font-bold text-slate-900">${currentLang === 'en' ? mcat.en : mcat.zh}</td>
+                <td class="px-8 py-5 text-center font-black text-pink-600 text-lg num-font">${ratios[i]}</td>
+                <td class="px-8 py-5 text-slate-500 text-sm font-medium italic">${roles[i]}</td>
+            </tr>
+        `).join('');
+    }
+
+    function exportData() {
+        let csv = "Category,Name,Value\n";
+        document.querySelectorAll('#asset-table-body tr').forEach(row => {
+            csv += `"${row.querySelector('.asset-cat').value}","${row.querySelector('.asset-name').value}",${parseNumber(row.querySelector('.asset-val').value)}\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'retirement_plan.csv';
+        a.click();
+    }
+
+    window.onload = () => {
+        addAssetRow({ cat: 'Core', name: 'HSBC MPF Balanced', val: 350000 });
+        addAssetRow({ cat: 'Income', name: 'AIA QDAP Policy', val: 120000 });
+        addAssetRow({ cat: 'Growth', name: 'Vanguard Total Stock', val: 280000 });
+        updateUI();
+    };
+</script>
+</body>
+</html>
